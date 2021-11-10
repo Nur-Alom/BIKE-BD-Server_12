@@ -20,6 +20,7 @@ async function run() {
         await client.connect();
         const database = client.db('bd-bikes');
         const productsCollection = database.collection('products');
+        const orderCollection = database.collection('ordersItem');
 
         // Get Home Products API.
         app.get('/homeProducts', async (req, res) => {
@@ -33,6 +34,23 @@ async function run() {
             res.json(services);
         });
 
+        // Get Single Products.
+        app.get('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+            const query = { _id: ObjectId(id) };
+            const singleItem = await productsCollection.findOne(query);
+            res.json(singleItem);
+        });
+
+        // Order API Options.
+
+        // Post Orders
+        app.post('/ordersItem', async (req, res) => {
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            res.json(result)
+        });
     }
     finally {
         // await client.close();
