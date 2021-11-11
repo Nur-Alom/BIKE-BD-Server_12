@@ -21,6 +21,7 @@ async function run() {
         const database = client.db('bd-bikes');
         const productsCollection = database.collection('products');
         const orderCollection = database.collection('ordersItem');
+        const usersCollection = database.collection('users');
 
         // Get Home Products API.
         app.get('/homeProducts', async (req, res) => {
@@ -51,6 +52,26 @@ async function run() {
             const result = await orderCollection.insertOne(order);
             res.json(result)
         });
+
+        // Users API.
+
+        // Post Users
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.json(result);
+        });
+
+        // 
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        });
+
     }
     finally {
         // await client.close();
