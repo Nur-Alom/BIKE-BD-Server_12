@@ -23,6 +23,8 @@ async function run() {
         const orderCollection = database.collection('ordersItem');
         const usersCollection = database.collection('users');
 
+        // Products API.
+
         // Get Home Products API.
         app.get('/homeProducts', async (req, res) => {
             const services = await productsCollection.find({}).limit(6).toArray();
@@ -50,6 +52,14 @@ async function run() {
             const result = await productsCollection.insertOne(newData);
             res.json(result)
         });
+
+        // Delete Products
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productsCollection.deleteOne(query);
+            res.json(result);
+        })
 
 
         // Order API Options.
