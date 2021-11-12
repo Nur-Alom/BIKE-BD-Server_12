@@ -44,6 +44,14 @@ async function run() {
             res.json(singleItem);
         });
 
+        // Post New Added Data/Product.
+        app.post('/products', async (req, res) => {
+            const newData = req.body;
+            const result = await productsCollection.insertOne(newData);
+            res.json(result)
+        });
+
+
         // Order API Options.
 
         // Post Orders
