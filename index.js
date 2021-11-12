@@ -22,6 +22,7 @@ async function run() {
         const productsCollection = database.collection('products');
         const orderCollection = database.collection('ordersItem');
         const usersCollection = database.collection('users');
+        const reviewsCollection = database.collection('review');
 
         // Products API.
 
@@ -98,7 +99,7 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const result = await orderCollection.deleteOne(query);
             res.json(result);
-        })
+        });
 
 
         // Users API.
@@ -127,7 +128,7 @@ async function run() {
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
-        })
+        });
 
         // Check Admin 
         app.get('/users/:email', async (req, res) => {
@@ -139,7 +140,23 @@ async function run() {
                 isAdmin = true;
             }
             res.json({ admin: isAdmin });
-        })
+        });
+
+
+        // User Review Api
+
+        // Post New Reviews.
+        app.post('/review', async (req, res) => {
+            const newData = req.body;
+            const result = await reviewsCollection.insertOne(newData);
+            res.json(result)
+        });
+
+        // Get All Reviews API.
+        app.get('/review', async (req, res) => {
+            const reviews = await reviewsCollection.find({}).toArray();
+            res.json(reviews);
+        });
 
     }
     finally {
